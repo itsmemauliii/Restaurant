@@ -6,10 +6,9 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-# 📚 Ensure NLTK uses local data (for Streamlit Cloud)
-nltk.data.path.append('nltk_data')
-nltk.download('punkt', download_dir='nltk_data')
-nltk.download('stopwords', download_dir='nltk_data')
+# Safe download for Hugging Face (runs once)
+nltk.download('punkt')
+nltk.download('stopwords')
 # 🎨 Set page config with restaurant theme
 st.set_page_config(page_title="Restaurant NLP Tool", page_icon="🍛", layout="centered")
 
