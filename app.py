@@ -8,7 +8,8 @@ from nltk.tokenize import word_tokenize
 
 # 📚 Ensure NLTK uses local data (for Streamlit Cloud)
 nltk.data.path.append('nltk_data')
-
+nltk.download('punkt', download_dir='nltk_data')
+nltk.download('stopwords', download_dir='nltk_data')
 # 🎨 Set page config with restaurant theme
 st.set_page_config(page_title="Restaurant NLP Tool", page_icon="🍛", layout="centered")
 
@@ -65,7 +66,7 @@ if uploaded_file:
 
         # Mood-based food suggestions
         st.subheader("💖 Match Food to Your Mood")
-        mood = st.text_input("Enter your mood (e.g., happy, sad, romantic)")
+        mood = st.text_input("Enter your mood (e.g., happy, sad, chill)")
         if mood:
             suggestions = mood_matcher(mood)
             if suggestions:
