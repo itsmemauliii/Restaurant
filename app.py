@@ -4,19 +4,8 @@ import nltk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
-# Download NLTK resources (only needed once)
 import nltk
-
-# Safe downloads — only if missing
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
-
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
+nltk.data.path.append('nltk_data')
     
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
