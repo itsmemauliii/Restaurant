@@ -3,12 +3,11 @@ import pandas as pd
 import nltk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-
-import nltk
-nltk.data.path.append('nltk_data')
-    
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+
+# 📚 Ensure NLTK uses local data (for Streamlit Cloud)
+nltk.data.path.append('nltk_data')
 
 # 🎨 Set page config with restaurant theme
 st.set_page_config(page_title="Restaurant NLP Tool", page_icon="🍛", layout="centered")
@@ -20,15 +19,14 @@ st.markdown("Upload your restaurant dataset to explore dishes and get mood-based
 # 📤 File uploader
 uploaded_file = st.file_uploader("Upload CSV or Excel file", type=["csv", "xlsx"])
 
-# 🧠 NLP processing function
-
+# 🧠 NLP processing: clean and tokenize text
 def process_text_column(df, column):
     text = " ".join(df[column].dropna().astype(str))
     tokens = word_tokenize(text.lower())
     tokens = [word for word in tokens if word.isalpha() and word not in stopwords.words('english')]
     return " ".join(tokens)
 
-# 🌥️ Word cloud generator
+# 🌥️ Generate and display word cloud
 def show_wordcloud(text):
     wc = WordCloud(width=800, height=400, background_color='white').generate(text)
     fig, ax = plt.subplots()
@@ -36,36 +34,36 @@ def show_wordcloud(text):
     ax.axis('off')
     st.pyplot(fig)
 
-# 💖 Mood-based food matcher
+# 💖 Suggest dishes based on mood
 def mood_matcher(mood):
     mood_map = {
         "happy": ["ice cream", "samosa", "pav bhaji"],
         "sad": ["chocolate", "dal khichdi", "comfort curry"],
-        "romantic": ["paneer tikka", "wine risotto", "gulab jamun"],
+        "chill": ["paneer tikka", "wine risotto", "gulab jamun"],
         "lazy": ["instant noodles", "sandwich", "ready-to-eat biryani"],
         "energetic": ["fruit salad", "protein bowl", "green smoothie"]
     }
     return mood_map.get(mood.lower(), [])
 
-# 📊 Main logic
+# 📊 Main app logic
 if uploaded_file:
     try:
-        # Read file based on extension
+        # Read uploaded file
         df = pd.read_csv(uploaded_file) if uploaded_file.name.endswith('.csv') else pd.read_excel(uploaded_file)
         st.success("File uploaded successfully!")
         st.write("Preview of your data:")
         st.dataframe(df.head())
 
-        # Select a text column for NLP
+        # Let user select a text column
         text_cols = df.select_dtypes(include='object').columns.tolist()
         selected_col = st.selectbox("Select a column to analyze", text_cols)
 
-        # Show word cloud
+        # Show word cloud from selected column
         cleaned_text = process_text_column(df, selected_col)
         st.subheader("🔍 Word Cloud of Selected Column")
         show_wordcloud(cleaned_text)
 
-        # Mood-based suggestion
+        # Mood-based food suggestions
         st.subheader("💖 Match Food to Your Mood")
         mood = st.text_input("Enter your mood (e.g., happy, sad, romantic)")
         if mood:
