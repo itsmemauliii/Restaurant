@@ -5,8 +5,15 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 # Download NLTK resources (only needed once)
-nltk.download('punkt')
-nltk.download('stopwords')
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
@@ -21,6 +28,7 @@ st.markdown("Upload your restaurant dataset to explore dishes and get mood-based
 uploaded_file = st.file_uploader("Upload CSV or Excel file", type=["csv", "xlsx"])
 
 # 🧠 NLP processing function
+
 def process_text_column(df, column):
     text = " ".join(df[column].dropna().astype(str))
     tokens = word_tokenize(text.lower())
